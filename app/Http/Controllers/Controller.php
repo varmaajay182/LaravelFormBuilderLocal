@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Codecrewinfotech\FormBuilder\Models\formBuilder;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as BaseController;
+
+
+class Controller extends BaseController
+{
+    use AuthorizesRequests, ValidatesRequests;
+
+    public function register(){
+        $register = formBuilder::find(2);
+        // dd();
+        return view('index',['register'=>$register->elements]);
+    }
+
+    public function testData(Request $request){
+        dd($request->all());
+    }
+}
