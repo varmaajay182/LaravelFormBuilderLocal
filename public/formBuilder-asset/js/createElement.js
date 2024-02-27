@@ -8,34 +8,56 @@ var radioCounter = 1
 var checkboxCounter = 1
 var fileUploadCounter = 1;
 var buttonCounter = 1;
+var getDiv;
 
 
-
-function createInputField() {
+function createInputField(button) {
     $.getScript("formBuilder-asset/js/componentSetting/inputFieldSetting.js", function () {
         // 
-        var div = $(
-            "<div class='form-group' onclick=inputFieldSetting()  style='display: flex; justify-content: space-around; align-items:center; background-color:#f0f0f0c8; width: 100%; height:8%; margin-bottom: 10px; margin-top: 10px;'></div>"
-        );
+        var inputOuterdiv = $("<div>")
+            .addClass("form-group")
+            .css({
+                "display": "flex",
+                "alignItems": "center",
+                "width": "100%",
+                "height": "8%",
+                "marginBottom": "10px",
+                "marginTop": "10px"
+            });
 
-        var label = $("<label style='width: 20%; margin-right: 10px; font-size:20px'><b>InputField" +
+        var label = $("<label style='width: 20%; margin-left: 36px; font-size:20px'><b>InputField" +
             inputFiledCounter + ": </b></label>");
 
         var inputField = $(
             `<input type='text' class='form-control' id='idName${inputFiledCounter}' name='nameatrribute${inputFiledCounter}' placeholder='Please enter something...' style='width: 70%; height:64%; margin-top: 10px; margin-bottom: 10px'>`
         );
 
-       
+        inputOuterdiv.click(function (event) {
+            if (getDiv) {
+                removeBackgroundColor(getDiv)
+            }
+            getDiv = $(this)
+            addBackgroundColor(getDiv);
+            inputFieldSetting()
+        });
 
 
-        $(div).append(label).append(inputField);
+        $(inputOuterdiv).append(label).append(inputField).append(button);
+
+
+        applyHover(inputOuterdiv)
+
+        button.click(function () {
+            deleteElement(inputOuterdiv)
+        })
+
         inputFiledCounter++;
-        $('#form-content').append(div);
+        $('#form-content').append(inputOuterdiv);
     });
 }
 
 
-function createTextArea() {
+function createTextArea(button) {
     $.getScript("formBuilder-asset/js/componentSetting/textAreaFieldSetting.js", function () {
         // return console.log(div);
 
@@ -46,33 +68,71 @@ function createTextArea() {
             "' style='width: 70%; height:64%; margin-top: 10px; margin-bottom: 10px'>"
         );
 
+
         var newDiv = $("<div>")
             .addClass("textAreaElement")
             .append(label)
-            .append(textArea);
+            .css({
+                "display": "flex",
+                "marginTop": "10px",
+                "alignItems": "center",
+                "width": "100%",
+                "transition": "background-color 0.3s"
+            })
+            .attr('id', 'textAreaElementId' + textareaCounter)
+            .append(textArea)
+            .append(button)
 
-        newDiv.click(function () {
+        newDiv.hover(
+            function () {
+
+                $('.cancel', this).css({
+                    'display': 'block'
+                });
+            },
+            function () {
+
+                $('.cancel', this).css({
+                    'display': 'none'
+                });
+            }
+        );
+
+        newDiv.click(function (event) {
+            if (getDiv) {
+                removeBackgroundColor(getDiv)
+            }
+            getDiv = $(this)
+            addBackgroundColor(getDiv);
             textAreaSetting()
         });
+
+        applyHover(newDiv)
+
+        button.click(function () {
+            deleteElement(newDiv)
+        })
+
 
         textareaCounter++
         $('#form-content').append(newDiv)
     });
 }
 
-function createSelectField() {
+function createSelectField(button) {
     $.getScript("formBuilder-asset/js/componentSetting/selectFieldSetting.js", function () {
 
         var select = $("<select>")
             .attr("name", "select" + selectCounter)
             .attr("id", "selectId" + selectCounter)
-            .addClass("custom-select")
+            .addClass("custom-select form-select")
             .css({
                 "width": "70%",
                 "marginTop": "10px",
                 "marginBottom": "10px",
                 "height": "40%"
-            });
+            })
+
 
         var label = $("<label>")
             .addClass("custom-label")
@@ -93,20 +153,50 @@ function createSelectField() {
         var containerDiv = $("<div>")
             .addClass("custom-container")
             .css({
-                "background-color": "#f0f0f0",
+                // "background-color": "#f0f0f0",
                 // "padding": "10px",
                 "width": "100%",
                 "height": "11%",
                 "marginBottom": "10px",
-                "marginTop": "10px"
+                "marginTop": "10px",
+                "display": "flex",
+                "alignItems": "center",
+                "transition": "background-color 0.3s"
             })
             .append(label)
-            .append(select);
+            .append(select)
+            .append(button)
 
-        containerDiv.click(function () {
+        containerDiv.hover(
+            function () {
+
+                $('.cancel', this).css({
+                    'display': 'block'
+                });
+            },
+            function () {
+
+                $('.cancel', this).css({
+                    'display': 'none'
+                });
+            }
+        );
+
+        containerDiv.click(function (event) {
+            if (getDiv) {
+                removeBackgroundColor(getDiv)
+            }
+            getDiv = $(this)
+            addBackgroundColor(getDiv);
+
             selectFieldSetting()
         });
 
+        applyHover(containerDiv)
+
+        button.click(function () {
+            deleteElement(containerDiv)
+        })
 
         selectCounter++;
         return $("#form-content").append(containerDiv);
@@ -114,25 +204,32 @@ function createSelectField() {
 
 }
 
-function createRadio(optionField) {
+function createRadio(button) {
     $.getScript("formBuilder-asset/js/componentSetting/radioSetting.js", function () {
-        var radioGroup = $("<div>").addClass("radioGroup gap-3");
+        var radioGroup = $("<div>").addClass("radioGroup gap-3").attr('id', 'radioGroupId' + radioCounter);
 
-        var outerDiv = $("<div>").attr('id','radioId'+radioCounter).css({
+        var radioOuterDiv = $("<div>").attr('id', 'radioId' + radioCounter).css({
             "width": "100%",
             "height": "10%",
             "marginTop": "10px",
             "display": "flex",
             "align-items": "center",
-            "background-color": "#f0f0f0c8"
-        }).addClass("outer-div");
+            "transition": "background-color 0.3s"
+            // "background-color": "#f0f0f0c8"
+        }).addClass("outer-div")
 
-        outerDiv.on("click", function () {
+        radioOuterDiv.on("click", function () {
+            if (getDiv) {
+                removeBackgroundColor(getDiv)
+            }
+            getDiv = $(this)
+            addBackgroundColor(getDiv);
+
             radioSetting();
         });
 
-        for (var i = 1; i <= 3; i++) {
-            var innerDiv = $("<div>").addClass("inner-div d-flex align-items-center radiogrouplabel");
+        for (var i = 1; i <= 2; i++) {
+            var innerDiv = $("<div>").addClass("inner-div d-flex align-items-center radiogrouplabel").attr('id', 'innerDiv' + i);
             var radio = $("<input>").attr({
                 "type": "radio",
                 "name": "radioGroup" + radioCounter,
@@ -158,86 +255,143 @@ function createRadio(optionField) {
         labelGropName.append(labelGroup)
 
         radioCounter++;
-        outerDiv.append(labelGropName).append(radioGroup);
-        $("#form-content").append(outerDiv);
-        
-        
+        radioOuterDiv.append(labelGropName).append(radioGroup).append(button)
+
+
+        applyHover(radioOuterDiv)
+
+        button.click(function () {
+            deleteElement(radioOuterDiv)
+        })
+
+        $("#form-content").append(radioOuterDiv);
+
+
     });
 }
 
 
-function createCheckbox(outerDiv) {
+function createCheckbox(button) {
+    $.getScript("formBuilder-asset/js/componentSetting/checkBoxSetting.js", function () {
+        var checkBoxOuterDiv = $("<div>").addClass("d-flex checkBoxOuterDiv").css({
+            // "background-color": "#f0f0f0c8",
+            "padding": "10px",
+            "marginTop": "10px",
+            "marginBottom": "10px",
+            "width": "100%"
+        });
 
-    var checkboxGroup = $("<div>").addClass("custom-checkbox-group");
+        var checkboxGroup = $("<div>").addClass("custom-checkbox-group").attr('id', 'checkboxIdGroup' + checkboxCounter);
 
+        var checkBoxLabel = $('<div>').addClass('checkBoxLabel').css({
+            "margin-left": "36px",
+            "width": "20%",
+        })
+        var labelGroup = $("<label>")
+            .html("<b>Check Box " + checkboxCounter + " : </b>")
+            .css({
+                "fontSize": "20px"
+            });
 
-    var labelGroup = document.createElement("label");
-    labelGroup.innerHTML = "<b>Check Box " + checkboxCounter + " : </b>";
-    labelGroup.style.marginLeft = "36px";
-    labelGroup.style.width = "20%";
-    labelGroup.style.fontSize = "20px";
+        for (var i = 1; i <= 2; i++) {
+            var checkboxDiv = $("<div>").addClass("custom-checkbox");
 
-    for (var i = 1; i <= 3; i++) {
-        var checkboxDiv = $("<div>").addClass("custom-checkbox");
+            var checkbox = $("<input>")
+                .attr({
+                    type: "checkbox",
+                    name: "checkboxGroup" + i,
+                    id: "checkBoxId" + i,
+                    value: "checkBoxValue" + i,
+                })
+                .addClass("custom-checkbox-input");
 
-        var checkbox = $("<input>")
+            var label = $("<label>")
+                .css({
+                    "fontSize": "16px",
+                    "marginLeft": "5px"
+                })
+                .attr('for', "checkBoxId" + i)
+                .html("checkBox" + i,);
+
+            checkboxDiv.append(checkbox).append(label);
+            checkboxGroup.append(checkboxDiv);
+
+        }
+
+        applyHover(checkBoxOuterDiv)
+
+        button.click(function () {
+            deleteElement(checkBoxOuterDiv)
+        })
+
+        checkBoxOuterDiv.click(function () {
+            if (getDiv) {
+                removeBackgroundColor(getDiv)
+            }
+            getDiv = $(this)
+            addBackgroundColor(getDiv);
+            checkBoxFieldSetting()
+        });
+        checkBoxLabel.append(labelGroup)
+        checkBoxOuterDiv.append(checkBoxLabel).append(checkboxGroup).append(button)
+        checkboxCounter++;
+
+        $("#form-content").append(checkBoxOuterDiv);
+    });
+}
+
+function createFileUpload(button) {
+
+    $.getScript("formBuilder-asset/js/componentSetting/fileUploadSetting.js", function () {
+        var fileUpload = $("<input>")
             .attr({
-                type: "checkbox",
-                name: "checkboxGroup" + checkboxCounter,
-                value: "checkBox" + i,
+                type: "file",
+                name: "fileUpload" + fileUploadCounter,
             })
-            .addClass("custom-checkbox-input");
+            .addClass("custom-file-upload");
 
         var label = $("<label>")
             .css({
-                "fontSize": "16px",
-                "marginLeft": "5px"
+                "width": "20%",
+                "fontSize": "20px",
+                "marginLeft": "31px"
             })
-            .html("checkBox" + i,);
+            .html("<b>File Upload " + fileUploadCounter + " : </b>");
 
-        checkboxDiv.append(checkbox).append(label);
-        checkboxGroup.append(checkboxDiv);
+        var containerDiv = $("<div>")
+            .addClass("file-container")
+            .css({
+                // "background-color": "#f0f0f0",
+                "padding": "10px",
+                "marginBottom": "10px",
+                "marginTop": "10px"
+            })
+            .append(label)
+            .append(fileUpload);
 
-    }
+        containerDiv.on("click", function () {
+            if (getDiv) {
+                removeBackgroundColor(getDiv)
+            }
+            getDiv = $(this)
+            addBackgroundColor(getDiv);
 
-    outerDiv.append(labelGroup).append(checkboxGroup)
-    checkboxCounter++;
+            fileUploadSetting();
+        });
 
-    $("#form-content").append(outerDiv);
+        applyHover(containerDiv)
+
+        button.click(function () {
+            deleteElement(containerDiv)
+        })
+
+        fileUploadCounter++;
+        $("#form-content").append(containerDiv);
+
+    });
 }
 
-function createFileUpload() {
-    var fileUpload = $("<input>")
-        .attr({
-            type: "file",
-            name: "fileUpload" + fileUploadCounter,
-        })
-        .addClass("custom-file-upload");
-
-    var label = $("<label>")
-        .css({
-            "width": "20%",
-            "fontSize": "20px",
-            "marginLeft": "36px"
-        })
-        .html("<b>File Upload " + fileUploadCounter + " : </b>");
-
-    var containerDiv = $("<div>")
-        .addClass("custom-container")
-        .css({
-            "background-color": "#f0f0f0",
-            "padding": "10px",
-            "marginBottom": "10px",
-            "marginTop": "10px"
-        })
-        .append(label)
-        .append(fileUpload);
-
-    fileUploadCounter++;
-    $("#form-content").append(containerDiv);
-}
-
-function createButton() {
+function createButton(button) {
     var button = $("<button>")
         .attr({
             type: "submit",
@@ -259,4 +413,59 @@ function createButton() {
     buttonCounter++;
     $("#form-content").append(containerDiv);
 }
+
+function addBackgroundColor(getDiv) {
+    getDiv.css({
+        "backgroundColor": "rgb(150 227 178)",
+        "borderLeft": "7px solid rgb(57 151 86)"
+    })
+}
+
+function removeBackgroundColor(getDiv) {
+    getDiv.css({
+        'backgroundColor': "",
+        "borderLeft": ""
+    })
+}
+
+function applyHover(getDivForHover) {
+    getDivForHover.hover(
+        function () {
+            $('.cancel', this).css({
+                'display': 'block'
+            });
+        },
+        function () {
+
+            $('.cancel', this).css({
+                'display': 'none'
+            });
+        }
+    );
+}
+
+function deleteElement(getDivForDelete) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            getDivForDelete.remove()
+            Swal.fire(
+                'Deleted!',
+                'Your item has been deleted.',
+                'success'
+            );
+        }
+    });
+}
+
+
+
 

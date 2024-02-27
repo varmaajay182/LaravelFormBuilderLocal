@@ -67,8 +67,8 @@ function appendIdName(innerBox) {
     return innerBox.append(IdNameLabel).append(IdNameInput);
 }
 
-function appendOption(){
-    
+function appendOption() {
+
     // alert('hello')
 }
 
@@ -78,6 +78,7 @@ function updateIdName(currentIdName, newIdName) {
 }
 
 $('#form-content').on('click', '.custom-container', function () {
+    
     label = $(this).find('label');
     currentIdName = $(this).find('select');
 });
