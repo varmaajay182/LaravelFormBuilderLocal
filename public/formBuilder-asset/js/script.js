@@ -38,7 +38,7 @@ $(document).ready(function () {
                 } else if (ui.helper.hasClass("fileUpload")) {
                     var element = createFileUpload(button)
                 } else if (ui.helper.hasClass("button")) {
-                    console.log('hello')
+                    // console.log('hello')
                     var element = createButton(button);
                 }
                 

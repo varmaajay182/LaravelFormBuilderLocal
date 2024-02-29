@@ -21,6 +21,10 @@ function fileUploadSetting(){
     appendNameAttribute(nameAttrInnebox);
     outerBox.append(nameAttrInnebox);
 
+    var fileIdInnerbox = createInnerBox();
+    appendfileIdName(fileIdInnerbox)
+    outerBox.append(fileIdInnerbox)
+
     $('#element-setting').empty();
     $('#element-setting').append(outerBox);
 }
@@ -72,4 +76,20 @@ function appendNameAttribute(innerBox) {
     });
 
     innerBox.append(fileNameAttributeLabel).append(fileNameAttributeInput);
+}
+
+function appendfileIdName(innerBox){
+    var IdNameLabel = $("<label>").css({
+        "fontSize": "17px",
+        'marginBottom': '5px'
+    }).html('<b>Id Attr:</b>');
+
+    var IdNameInput  = $('<input>').addClass('form-control').attr('placeholder', 'Change the id').val(fileInput.attr('id'));
+
+    IdNameInput.on('input', function () {
+        var newIdName = $(this).val();
+        fileInput.attr('id', newIdName.toLowerCase())
+    });
+
+    return innerBox.append(IdNameLabel).append(IdNameInput);
 }

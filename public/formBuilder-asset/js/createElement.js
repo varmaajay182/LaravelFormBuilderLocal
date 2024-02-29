@@ -15,7 +15,7 @@ function createInputField(button) {
     $.getScript("formBuilder-asset/js/componentSetting/inputFieldSetting.js", function () {
         // 
         var inputOuterdiv = $("<div>")
-            .addClass("form-group")
+            .addClass("form-group inputbox")
             .css({
                 "display": "flex",
                 "alignItems": "center",
@@ -70,7 +70,7 @@ function createTextArea(button) {
 
 
         var newDiv = $("<div>")
-            .addClass("textAreaElement")
+            .addClass("textAreaElement inputbox")
             .append(label)
             .css({
                 "display": "flex",
@@ -151,7 +151,7 @@ function createSelectField(button) {
         select.append(option1).append(option2);
 
         var containerDiv = $("<div>")
-            .addClass("custom-container")
+            .addClass("custom-container inputbox")
             .css({
                 // "background-color": "#f0f0f0",
                 // "padding": "10px",
@@ -216,7 +216,7 @@ function createRadio(button) {
             "align-items": "center",
             "transition": "background-color 0.3s"
             // "background-color": "#f0f0f0c8"
-        }).addClass("outer-div")
+        }).addClass("outer-div inputbox")
 
         radioOuterDiv.on("click", function () {
             if (getDiv) {
@@ -270,10 +270,9 @@ function createRadio(button) {
     });
 }
 
-
 function createCheckbox(button) {
     $.getScript("formBuilder-asset/js/componentSetting/checkBoxSetting.js", function () {
-        var checkBoxOuterDiv = $("<div>").addClass("d-flex checkBoxOuterDiv").css({
+        var checkBoxOuterDiv = $("<div>").addClass("d-flex checkBoxOuterDiv inputbox").css({
             // "background-color": "#f0f0f0c8",
             "padding": "10px",
             "marginTop": "10px",
@@ -359,15 +358,17 @@ function createFileUpload(button) {
             .html("<b>File Upload " + fileUploadCounter + " : </b>");
 
         var containerDiv = $("<div>")
-            .addClass("file-container")
+            .addClass("file-container inputbox")
             .css({
                 // "background-color": "#f0f0f0",
+                "display": "flex",
                 "padding": "10px",
                 "marginBottom": "10px",
                 "marginTop": "10px"
             })
             .append(label)
-            .append(fileUpload);
+            .append(fileUpload)
+            .append(button)
 
         containerDiv.on("click", function () {
             if (getDiv) {
@@ -392,26 +393,54 @@ function createFileUpload(button) {
 }
 
 function createButton(button) {
-    var button = $("<button>")
-        .attr({
-            type: "submit",
-            name: "button" + buttonCounter,
+    $.getScript("formBuilder-asset/js/componentSetting/buttonSetting.js", function () {
+        var buttonFeild = $("<button>")
+            .attr({
+                type: "submit",
+                name: "button" + buttonCounter,
+            })
+            .css({
+                "marginLeft": "36px",
+                // "width":"50%"
+
+            })
+            .addClass("btn btn-primary")
+
+            .html("Button " + buttonCounter);
+
+        var containerDiv = $("<div>")
+            .addClass("custom-container inputbox")
+            .css({
+                "width":"100%",
+                "display": "flex",
+                "padding": "10px",
+                "marginBottom": "10px",
+                "marginTop": "10px",
+                'height':'8%',
+                // "justifyContent":"center"
+            })
+            .append(buttonFeild)
+            .append(button)
+
+        containerDiv.on("click", function () {
+            if (getDiv) {
+                removeBackgroundColor(getDiv)
+            }
+            getDiv = $(this)
+            addBackgroundColor(getDiv);
+
+            buttonSetting();
+        });
+
+        applyHover(containerDiv)
+
+        button.click(function () {
+            deleteElement(containerDiv)
         })
-        .addClass("btn btn-primary")
-        .html("Button " + buttonCounter);
 
-    var containerDiv = $("<div>")
-        .addClass("custom-container")
-        .css({
-
-            "padding": "10px",
-            "marginBottom": "10px",
-            "marginTop": "10px"
-        })
-        .append(button);
-
-    buttonCounter++;
-    $("#form-content").append(containerDiv);
+        buttonCounter++;
+        $("#form-content").append(containerDiv);
+    });
 }
 
 function addBackgroundColor(getDiv) {
@@ -429,8 +458,10 @@ function removeBackgroundColor(getDiv) {
 }
 
 function applyHover(getDivForHover) {
+ 
     getDivForHover.hover(
         function () {
+          
             $('.cancel', this).css({
                 'display': 'block'
             });
@@ -445,6 +476,7 @@ function applyHover(getDivForHover) {
 }
 
 function deleteElement(getDivForDelete) {
+
     Swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
