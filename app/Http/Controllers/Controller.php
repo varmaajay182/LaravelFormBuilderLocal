@@ -14,9 +14,9 @@ class Controller extends BaseController
     use AuthorizesRequests, ValidatesRequests;
 
     public function register(){
-        $register = formBuilder::find(1);
+       
         // dd();
-        return view('form',['register'=>$register->elements]);
+        return view('form');
     }
 
     public function testData(Request $request){
